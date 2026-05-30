@@ -1,0 +1,43 @@
+// Данные вайбов свидания
+export const VIBES = [
+  {
+    id: 'cozy',
+    label: 'Уютный вечер',
+    emoji: '☕',
+    icon: 'Coffee',
+    color: '#c9a96e',
+    colorDim: 'rgba(201, 169, 110, 0.15)',
+    description: 'Кофейни, тихие ресторанчики, вечерние прогулки',
+    tags: ['кофе', 'уют', 'разговоры'],
+  },
+  {
+    id: 'active',
+    label: 'Активный отдых',
+    emoji: '🎳',
+    icon: 'Zap',
+    color: '#7ec8a0',
+    colorDim: 'rgba(126, 200, 160, 0.15)',
+    description: 'Боулинг, картинг, велосипеды, сап-борды',
+    tags: ['спорт', 'азарт', 'движение'],
+  },
+  {
+    id: 'cultural',
+    label: 'Культурная программа',
+    emoji: '🎨',
+    icon: 'Palette',
+    color: '#9b7ec8',
+    colorDim: 'rgba(155, 126, 200, 0.15)',
+    description: 'Выставки, музеи, театры, лектории',
+    tags: ['искусство', 'знания', 'эмоции'],
+  },
+  {
+    id: 'adventure',
+    label: 'Необычное приключение',
+    emoji: '✨',
+    icon: 'Sparkles',
+    color: '#e8836a',
+    colorDim: 'rgba(232, 131, 106, 0.15)',
+    description: 'Квесты, мастер-классы, крыши с красивым видом',
+    tags: ['адреналин', 'эксклюзив', 'wow'],
+  },
+];
