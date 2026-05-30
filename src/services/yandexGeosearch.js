@@ -9,11 +9,11 @@ export function hasYandexApiKey() {
 
 const SUGGEST_PATH = import.meta.env.DEV
   ? '/yandex-api/suggest'
-  : 'https://suggest-maps.yandex.ru/v1/suggest';
+  : '/api/yandex/suggest';
 
 const GEOCODE_PATH = import.meta.env.DEV
   ? '/yandex-api/geocode'
-  : 'https://geocode-maps.yandex.ru/v1/';
+  : '/api/yandex/geocode';
 
 /**
  * Подсказки адресов и организаций (Geosuggest).
@@ -30,7 +30,6 @@ export async function fetchYandexSuggest(text, { lat, lon }, signal) {
   if (query.length < 2) return [];
 
   const params = new URLSearchParams({
-    apikey,
     text: query,
     lang: 'ru_RU',
     results: '8',
@@ -40,6 +39,10 @@ export async function fetchYandexSuggest(text, { lat, lon }, signal) {
     ll: `${lon},${lat}`,
     spn: '0.45,0.35',
   });
+
+  if (import.meta.env.DEV) {
+    params.set('apikey', apikey);
+  }
 
   const res = await fetch(`${SUGGEST_PATH}?${params}`, { signal });
   if (!res.ok) {
@@ -69,11 +72,14 @@ export async function resolveYandexSuggestItem(item, signal) {
   if (!apikey) throw new Error('NO_API_KEY');
 
   const params = new URLSearchParams({
-    apikey,
     format: 'json',
     lang: 'ru_RU',
     results: '1',
   });
+
+  if (import.meta.env.DEV) {
+    params.set('apikey', apikey);
+  }
 
   if (item.uri) {
     params.set('uri', item.uri);
