@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TalArc — Тут что-то будет</title>
+  <meta name="description" content="TalArc — Скоро здесь появится нечто потрясающее. Новая платформа цифровых решений на стыке инноваций и дизайна.">
+  <meta name="theme-color" content="#09090b">
+  
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* Reset & CSS variables */
+    :root {
+      --bg-dark: #09090b;
+      --bg-card: rgba(18, 18, 22, 0.6);
+      --bg-card-hover: rgba(26, 26, 32, 0.8);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-color-hover: rgba(239, 68, 68, 0.3);
+      
+      /* Vibrant red OKLCH color palette */
+      --red-primary: oklch(0.6 0.25 20);
+      --red-light: oklch(0.65 0.22 20);
+      --red-glow: oklch(0.6 0.25 20 / 0.15);
+      --red-glow-strong: oklch(0.6 0.25 20 / 0.4);
+      --red-dark: oklch(0.4 0.18 20);
+      
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --text-bright: #ffffff;
+      
+      --font-display: 'Outfit', 'Inter', sans-serif;
+      --font-body: 'Inter', sans-serif;
+      
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Ambient Background Glow */
+    .ambient-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -2;
+      overflow: hidden;
+      background: radial-gradient(circle at 10% 20%, rgba(20, 10, 15, 1) 0%, rgba(9, 9, 11, 1) 90%);
+    }
+
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(140px);
+      opacity: 0.45;
+      z-index: -1;
+      pointer-events: none;
+      animation: float 25s infinite alternate ease-in-out;
+    }
+
+    .orb-1 {
+      top: -10%;
+      left: 20%;
+      width: 50vw;
+      height: 50vw;
+      background: radial-gradient(circle, var(--red-primary) 0%, transparent 70%);
+      animation-duration: 20s;
+    }
+
+    .orb-2 {
+      bottom: -20%;
+      right: 10%;
+      width: 60vw;
+      height: 60vw;
+      background: radial-gradient(circle, rgba(239, 68, 68, 0.4) 0%, transparent 70%);
+      animation-duration: 30s;
+    }
+
+    /* Canvas background for particle overlay */
+    #particles-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    @keyframes float {
+      0% {
+        transform: translate(0, 0) scale(1);
+      }
+      50% {
+        transform: translate(4%, 6%) scale(1.1);
+      }
+      100% {
+        transform: translate(-3%, -4%) scale(0.9);
+      }
+    }
+
+    /* App Shell / Container */
+    .app-shell {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2.5rem 1.5rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* Header glow line */
+    .header-glow-line {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: clamp(200px, 40vw, 600px);
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--red-primary), transparent);
+      box-shadow: 0 0 20px var(--red-primary);
+    }
+
+    /* Card Container */
+    .content-card {
+      max-width: 680px;
+      width: 100%;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 3.5rem 3rem;
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
+      box-shadow: 
+        0 4px 30px rgba(0, 0, 0, 0.4),
+        inset 0 1px 1px rgba(255, 255, 255, 0.05),
+        0 0 40px rgba(239, 68, 68, 0.03);
+      text-align: center;
+      transition: var(--transition-smooth);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .content-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+      z-index: 2;
+    }
+
+    .content-card:hover {
+      border-color: var(--border-color-hover);
+      box-shadow: 
+        0 8px 40px rgba(0, 0, 0, 0.5),
+        inset 0 1px 1px rgba(255, 255, 255, 0.08),
+        0 0 50px rgba(239, 68, 68, 0.08);
+      transform: translateY(-4px);
+    }
+
+    /* Logo Wrapper and Styling */
+    .logo-container {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      margin-bottom: 2rem;
+    }
+
+    .logo-glow-ring {
+      position: absolute;
+      width: 130px;
+      height: 130px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--red-glow-strong) 0%, transparent 70%);
+      filter: blur(8px);
+      z-index: 1;
+      animation: pulse 4s infinite alternate ease-in-out;
+    }
+
+    .logo-frame {
+      position: relative;
+      z-index: 2;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      background: rgba(18, 18, 22, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.05),
+        0 4px 20px rgba(0, 0, 0, 0.5);
+      transition: var(--transition-smooth);
+      overflow: hidden;
+    }
+
+    .logo-frame::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      padding: 1.5px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), var(--red-primary), rgba(255, 255, 255, 0.02));
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .content-card:hover .logo-frame {
+      border-color: rgba(239, 68, 68, 0.4);
+      transform: scale(1.05) rotate(5deg);
+      box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.05),
+        0 4px 25px rgba(239, 68, 68, 0.25);
+    }
+
+    .logo-img {
+      width: 58px;
+      height: 58px;
+      object-fit: contain;
+      user-select: none;
+      -webkit-user-drag: none;
+      /* Precise filter that recolors the logo completely to beautiful vibrant red */
+      filter: brightness(0) saturate(100%) invert(20%) sepia(90%) saturate(6000%) hue-rotate(350deg) brightness(95%) contrast(120%) drop-shadow(0 0 8px rgba(239, 68, 68, 0.5));
+      transition: var(--transition-smooth);
+    }
+
+    .content-card:hover .logo-img {
+      filter: brightness(0) saturate(100%) invert(25%) sepia(95%) saturate(7000%) hue-rotate(355deg) brightness(105%) contrast(125%) drop-shadow(0 0 12px rgba(239, 68, 68, 0.8));
+    }
+
+    @keyframes pulse {
+      0% {
+        transform: scale(0.9);
+        opacity: 0.6;
+      }
+      100% {
+        transform: scale(1.15);
+        opacity: 1;
+      }
+    }
+
+    /* Headline & Subhead */
+    .title-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.4rem 1rem;
+      border-radius: 100px;
+      background: rgba(239, 68, 68, 0.07);
+      border: 1px solid rgba(239, 68, 68, 0.15);
+      color: var(--red-light);
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 10px rgba(239, 68, 68, 0.03);
+    }
+
+    .title-badge span {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--red-primary);
+      margin-right: 8px;
+      box-shadow: 0 0 8px var(--red-primary);
+      animation: indicator-pulse 1.8s infinite ease-in-out;
+    }
+
+    @keyframes indicator-pulse {
+      0%, 100% { opacity: 0.4; }
+      50% { opacity: 1; }
+    }
+
+    .main-title {
+      font-family: var(--font-display);
+      font-size: clamp(2rem, 6.5vw, 3.25rem);
+      font-weight: 800;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      color: var(--text-bright);
+      margin-bottom: 1rem;
+      text-transform: uppercase;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #ffffff 30%, #fecaca 70%, var(--red-primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .description {
+      font-size: clamp(1rem, 3.5vw, 1.125rem);
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      font-weight: 300;
+    }
+
+    /* Newsletter Form Style */
+    .form-container {
+      width: 100%;
+      max-width: 480px;
+      margin: 0 auto 2.5rem;
+      position: relative;
+    }
+
+    .notify-form {
+      display: flex;
+      flex-direction: row;
+      gap: 8px;
+      background: rgba(10, 10, 12, 0.6);
+      padding: 6px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 14px;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .notify-form:focus-within {
+      border-color: rgba(239, 68, 68, 0.4);
+      box-shadow: 
+        0 0 20px rgba(239, 68, 68, 0.05),
+        inset 0 1px 1px rgba(255, 255, 255, 0.02);
+    }
+
+    .email-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      padding: 0.8rem 1rem;
+      font-family: var(--font-body);
+      font-size: 0.95rem;
+      color: var(--text-bright);
+      width: 100%;
+    }
+
+    .email-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+      font-weight: 300;
+    }
+
+    .submit-button {
+      background: var(--red-primary);
+      color: white;
+      border: none;
+      outline: none;
+      border-radius: 10px;
+      padding: 0.8rem 1.4rem;
+      font-family: var(--font-body);
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+    }
+
+    .submit-button:hover {
+      background: var(--red-light);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+    }
+
+    .submit-button:active {
+      transform: translateY(1px);
+    }
+
+    .submit-button svg {
+      transition: transform 0.3s ease;
+    }
+
+    .submit-button:hover svg {
+      transform: translateX(3px);
+    }
+
+    /* Response messages */
+    .form-message {
+      margin-top: 0.75rem;
+      font-size: 0.85rem;
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: var(--transition-smooth);
+      height: 0;
+      overflow: hidden;
+    }
+
+    .form-message.success {
+      color: #34d399;
+      opacity: 1;
+      height: auto;
+      transform: translateY(0);
+    }
+
+    .form-message.error {
+      color: #f87171;
+      opacity: 1;
+      height: auto;
+      transform: translateY(0);
+    }
+
+    /* Highlights Section */
+    .grid-highlights {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      padding-top: 2.5rem;
+      text-align: left;
+    }
+
+    .grid-item {
+      background: rgba(10, 10, 12, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.03);
+      border-radius: 16px;
+      padding: 1.25rem 1.5rem;
+      transition: var(--transition-smooth);
+    }
+
+    .grid-item:hover {
+      background: rgba(15, 15, 20, 0.5);
+      border-color: rgba(255, 255, 255, 0.06);
+      transform: translateY(-2px);
+    }
+
+    .grid-icon {
+      color: var(--red-primary);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+    }
+
+    .grid-item h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-bright);
+      margin-bottom: 0.25rem;
+    }
+
+    .grid-item p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      font-weight: 300;
+    }
+
+    /* Footer structure */
+    .app-footer {
+      margin-top: 3.5rem;
+      text-align: center;
+      z-index: 10;
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-bottom: 1rem;
+    }
+
+    .footer-link {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .footer-link::after {
+      content: '';
+      position: absolute;
+      bottom: -2px;
+      left: 0;
+      width: 0%;
+      height: 1px;
+      background-color: var(--red-primary);
+      transition: var(--transition-smooth);
+    }
+
+    .footer-link:hover {
+      color: var(--red-light);
+    }
+
+    .footer-link:hover::after {
+      width: 100%;
+    }
+
+    .copyright {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.25);
+      letter-spacing: 0.05em;
+    }
+
+    /* Responsive scaling */
+    @media (max-width: 600px) {
+      .app-shell {
+        padding: 1.5rem 1rem;
+      }
+      .content-card {
+        padding: 2.5rem 1.5rem;
+      }
+      .notify-form {
+        flex-direction: column;
+        background: transparent;
+        border: none;
+        padding: 0;
+        gap: 12px;
+      }
+      .email-input {
+        background: rgba(10, 10, 12, 0.6);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        border-radius: 12px;
+        padding: 0.9rem 1.2rem;
+      }
+      .submit-button {
+        width: 100%;
+        justify-content: center;
+        padding: 0.9rem;
+        border-radius: 12px;
+      }
+      .grid-highlights {
+        grid-template-columns: 1fr;
+        gap: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient BG Glow Orbs -->
+  <div class="ambient-bg" aria-hidden="true">
+    <div class="ambient-orb orb-1"></div>
+    <div class="ambient-orb orb-2"></div>
+  </div>
+
+  <!-- Interactive canvas particles -->
+  <canvas id="particles-canvas" aria-hidden="true"></canvas>
+
+  <div class="app-shell">
+    <div class="header-glow-line" aria-hidden="true"></div>
+    
+    <main class="content-card">
+      
+      <!-- Premium Logo Block -->
+      <div class="logo-container">
+        <div class="logo-glow-ring" aria-hidden="true"></div>
+        <div class="logo-frame">
+          <img 
+            src="https://i.ibb.co/pBxdrs2c/Chat-GPT-Image-30-2026-12-05-17-1.png" 
+            alt="TalArc Logo" 
+            class="logo-img"
+            id="talarc-logo-image"
+          >
+        </div>
+      </div>
+      
+      <!-- Sub-headline Badge -->
+      <div>
+        <div class="title-badge">
+          <span></span>В разработке
+        </div>
+      </div>
+      
+      <!-- Main Content -->
+      <h1 class="main-title">
+        <span class="gradient-text">Тут что-то будет</span>
+      </h1>
+      
+      <p class="description">
+        Мы создаем передовую экосистему цифровых продуктов нового поколения. В данный момент мы ведем активные работы по подготовке платформы к запуску.
+      </p>
+      
+      <!-- Interative Subscription Form -->
+      <div class="form-container">
+        <form class="notify-form" id="notify-form-el" novalidate>
+          <input 
+            type="email" 
+            class="email-input" 
+            placeholder="Укажите ваш e-mail" 
+            id="email-input-field"
+            required
+            aria-label="Электронная почта для уведомления"
+          >
+          <button type="submit" class="submit-button" id="submit-btn-el">
+            <span>Уведомить меня</span>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </button>
+        </form>
+        <div class="form-message" id="form-msg-el" role="alert"></div>
+      </div>
+      
+      <!-- Core Pillars Highlights -->
+      <section class="grid-highlights" aria-label="Преимущества TalArc">
+        <div class="grid-item">
+          <div class="grid-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+            </svg>
+          </div>
+          <h3>Цифровая архитектура</h3>
+          <p>Гибкие решения для высоконагруженных распределенных систем.</p>
+        </div>
+        
+        <div class="grid-item">
+          <div class="grid-icon">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/>
+            </svg>
+          </div>
+          <h3>Пиковая производительность</h3>
+          <p>Мгновенный отклик и оптимизация каждого байта данных.</p>
+        </div>
+      </section>
+
+    </main>
+    
+    <footer class="app-footer">
+      <div class="footer-links">
+        <a href="/datearc" class="footer-link" id="link-datearc">Конструктор свиданий DateArc</a>
+      </div>
+      <p class="copyright">&copy; 2026 TalArc. Все права защищены.</p>
+    </footer>
+  </div>
+
+  <script>
+    // 1. Sleek Particles Animation Background
+    const canvas = document.getElementById('particles-canvas');
+    const ctx = canvas.getContext('2d');
+
+    let particles = [];
+    const particleCount = 45;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = (Math.random() - 0.5) * 0.4;
+        this.speedY = (Math.random() - 0.5) * 0.4;
+        this.opacity = Math.random() * 0.5 + 0.1;
+      }
+
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        if (this.x < 0 || this.x > canvas.width || this.y < 0 || this.y > canvas.height) {
+          this.reset();
+        }
+      }
+
+      draw() {
+        ctx.fillStyle = `rgba(239, 68, 68, ${this.opacity})`;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function initParticles() {
+      for (let i = 0; i < particleCount; i++) {
+        particles.push(new Particle());
+      }
+    }
+
+    function animateParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+
+      // Draw connections
+      ctx.strokeStyle = 'rgba(239, 68, 68, 0.04)';
+      ctx.lineWidth = 0.8;
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.stroke();
+          }
+        }
+      }
+
+      requestAnimationFrame(animateParticles);
+    }
+
+    initParticles();
+    animateParticles();
+
+    // 2. Interactive Subscription Handler
+    const form = document.getElementById('notify-form-el');
+    const emailInput = document.getElementById('email-input-field');
+    const msgEl = document.getElementById('form-msg-el');
+
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const emailValue = emailInput.value.trim();
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+      if (!emailValue) {
+        showMessage('Пожалуйста, введите ваш email.', 'error');
+        return;
+      }
+
+      if (!emailRegex.test(emailValue)) {
+        showMessage('Пожалуйста, введите корректный адрес почты.', 'error');
+        return;
+      }
+
+      // Mimic API post with subtle loader
+      const btn = document.getElementById('submit-btn-el');
+      const origText = btn.innerHTML;
+      btn.style.opacity = '0.7';
+      btn.disabled = true;
+      
+      setTimeout(() => {
+        btn.style.opacity = '1';
+        btn.disabled = false;
+        
+        showMessage('Успешно! Мы сообщим вам о запуске.', 'success');
+        emailInput.value = '';
+      }, 1200);
+    });
+
+    function showMessage(text, type) {
+      msgEl.className = `form-message ${type}`;
+      msgEl.textContent = text;
+      
+      // Clear message after 4s
+      setTimeout(() => {
+        msgEl.style.opacity = '0';
+        setTimeout(() => {
+          msgEl.className = 'form-message';
+          msgEl.textContent = '';
+          msgEl.style.opacity = '';
+        }, 300);
+      }, 4000);
+    }
+  </script>
+</body>
+</html>

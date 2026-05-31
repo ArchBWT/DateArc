@@ -1,5 +1,4 @@
 import React from 'react';
-import './CustomSlider.css';
 
 const TimeSlider = ({ value, onChange }) => {
   const parseTime = (val) => {

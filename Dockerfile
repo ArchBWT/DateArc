@@ -12,6 +12,6 @@ RUN npm run build
 FROM nginx:stable-alpine
 COPY --from=build /app/dist /usr/share/nginx/html/datearc
 COPY nginx.conf /etc/nginx/conf.d/default.conf
-RUN echo '<!DOCTYPE html><html><head><title>talarc.ru</title></head><body></body></html>' > /usr/share/nginx/html/index.html
+COPY talarc.html /usr/share/nginx/html/index.html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
