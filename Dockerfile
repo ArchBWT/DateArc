@@ -12,10 +12,9 @@ RUN npm run build
 FROM node:20-alpine
 RUN apk add --no-cache nginx openssl
 COPY --from=build /app/dist /usr/share/nginx/html/datearc
-COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 COPY subscribe.js /app/subscribe.js
 COPY talarc.html /usr/share/nginx/html/index.html
 RUN mkdir -p /app/data && echo '[]' > /app/data/emails.json
-RUN echo '<!DOCTYPE html><html><head><title>talarc.ru</title></head><body></body></html>' > /usr/share/nginx/html/index.html
 EXPOSE 80
 CMD sh -c "node /app/subscribe.js & nginx -g 'daemon off;'"
