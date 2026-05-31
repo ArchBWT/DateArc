@@ -1,0 +1,13 @@
+services:
+  web:
+    build:
+      context: .
+      args:
+        VITE_YANDEX_MAPS_API_KEY: ${VITE_YANDEX_MAPS_API_KEY}
+        VITE_LOOK_ADS_ENABLED: ${VITE_LOOK_ADS_ENABLED:-false}
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /etc/letsencrypt:/etc/letsencrypt:ro
+    restart: unless-stopped
