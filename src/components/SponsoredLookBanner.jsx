@@ -4,14 +4,18 @@ import { ExternalLink } from 'lucide-react';
 export function SponsoredLookBanner({ ad, selected, onApplyLook }) {
   if (!ad.look) return null;
 
+  const resolvedLogoUrl = ad.logoUrl?.startsWith('/') 
+    ? `${import.meta.env.BASE_URL}${ad.logoUrl.slice(1)}` 
+    : ad.logoUrl;
+
   return (
     <div
       className={`sponsored-look-banner glass-card ${selected ? 'selected' : ''}`}
     >
       {/* Шапка: лого + спонсор */}
       <div className="look-ad-badge-row">
-        {ad.logoUrl ? (
-          <img src={ad.logoUrl} alt={ad.logoAlt} className="sponsor-logo sponsor-logo--xs" />
+        {resolvedLogoUrl ? (
+          <img src={resolvedLogoUrl} alt={ad.logoAlt} className="sponsor-logo sponsor-logo--xs" />
         ) : (
           <div className="sponsor-logo-fallback sponsor-logo--xs">
             {ad.sponsor?.charAt(0)}
@@ -26,8 +30,8 @@ export function SponsoredLookBanner({ ad, selected, onApplyLook }) {
           className="sponsored-look-visual"
           style={{ background: ad.imageGradient }}
         >
-          {ad.logoUrl ? (
-            <img src={ad.logoUrl} alt={ad.logoAlt} className="sponsor-logo sponsor-logo--lg" />
+          {resolvedLogoUrl ? (
+            <img src={resolvedLogoUrl} alt={ad.logoAlt} className="sponsor-logo sponsor-logo--lg" />
           ) : (
             <div className="sponsor-logo-fallback sponsor-logo--lg">
               {ad.sponsor?.charAt(0)}

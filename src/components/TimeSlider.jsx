@@ -27,19 +27,22 @@ const TimeSlider = ({ value, onChange }) => {
       <div className="time-slider-display">
         {String(hours).padStart(2, '0')}:{String(minutes).padStart(2, '0')}
       </div>
-      <input
-        type="range"
-        min={0}
-        max={1425}
-        step={15}
-        value={totalMinutes}
-        onChange={handleChange}
-        className="custom-slider"
-      />
-      <div className="time-slider-range">
-        <span>00:00</span>
-        <span>12:00</span>
-        <span>23:45</span>
+      <div className="time-slider-wrapper">
+        <div className="time-slider-track">
+          <div 
+            className="time-slider-fill" 
+            style={{ width: `${(totalMinutes / 1425) * 100}%` }}
+          />
+          <input
+            type="range"
+            min={0}
+            max={1425}
+            step={15}
+            value={totalMinutes}
+            onChange={handleChange}
+            className="time-slider-input"
+          />
+        </div>
       </div>
     </div>
   );
