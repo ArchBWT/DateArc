@@ -720,7 +720,7 @@
     const emailInput = document.getElementById('email-input-field');
     const msgEl = document.getElementById('form-msg-el');
 
-    form.addEventListener('submit', (e) => {
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
       
       const emailValue = emailInput.value.trim();
@@ -736,19 +736,32 @@
         return;
       }
 
-      // Mimic API post with subtle loader
       const btn = document.getElementById('submit-btn-el');
-      const origText = btn.innerHTML;
       btn.style.opacity = '0.7';
       btn.disabled = true;
-      
-      setTimeout(() => {
+
+      try {
+        const res = await fetch('/api/subscribe', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: emailValue }),
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          showMessage('Успешно! Мы сообщим вам о запуске.', 'success');
+          emailInput.value = '';
+        } else if (data.error === 'already_exists') {
+          showMessage('Этот email уже зарегистрирован.', 'error');
+        } else {
+          showMessage('Ошибка. Попробуйте ещё раз.', 'error');
+        }
+      } catch {
+        showMessage('Ошибка сети. Попробуйте позже.', 'error');
+      } finally {
         btn.style.opacity = '1';
         btn.disabled = false;
-        
-        showMessage('Успешно! Мы сообщим вам о запуске.', 'success');
-        emailInput.value = '';
-      }, 1200);
+      }
     });
 
     function showMessage(text, type) {
