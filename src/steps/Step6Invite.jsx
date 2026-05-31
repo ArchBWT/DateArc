@@ -215,14 +215,19 @@ export function Step6Invite({ state, setCardTheme, setCardMessage, reset }) {
             )}
 
             {state.location && (
-              <div className="invite-detail">
+              <a
+                className="invite-detail invite-detail-link"
+                href={state.location.coords ? `https://yandex.ru/maps/?pt=${state.location.coords[1]},${state.location.coords[0]}&z=17&text=${encodeURIComponent(state.location.name)}` : '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <span className="invite-detail-icon">📍</span>
                 <div className="invite-detail-text">
                   <div className="invite-detail-label">Где</div>
                   {state.location.name}
                   <div className="invite-detail-sub">{state.location.address}</div>
                 </div>
-              </div>
+              </a>
             )}
 
             {state.weather && (

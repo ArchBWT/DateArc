@@ -1587,6 +1587,24 @@ button.yandex-suggest-item:disabled {
   margin-bottom: 10px;
 }
 
+.invite-detail-link {
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  border-radius: var(--radius-md);
+  padding: 4px 6px;
+  margin: -4px -6px;
+  transition: background 0.2s;
+}
+
+.invite-detail-link:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.invite-detail-link:active {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 .invite-detail-icon {
   font-size: 16px;
   flex-shrink: 0;
