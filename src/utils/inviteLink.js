@@ -1,9 +1,33 @@
 /**
  * Кодирует данные приглашения в URL-хеш для шаринга.
- * Декодирует обратно при открытии ссылки.
+ * Использует TextEncoder для корректной работы с Unicode (кириллица).
+ * Base64url — без символов +/=//, безопасен в URL без экранирования.
  */
 
 const INVITE_VERSION = 1;
+
+function toBase64Url(str) {
+  return btoa(str)
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '');
+}
+
+function fromBase64Url(str) {
+  const padded = str.replace(/-/g, '+').replace(/_/g, '/');
+  const pad = padded.length % 4;
+  return atob(pad ? padded + '='.repeat(4 - pad) : padded);
+}
+
+function encodeUnicode(str) {
+  const bytes = new TextEncoder().encode(str);
+  return String.fromCharCode(...bytes);
+}
+
+function decodeUnicode(str) {
+  const bytes = Uint8Array.from(str, (c) => c.charCodeAt(0));
+  return new TextDecoder().decode(bytes);
+}
 
 export function encodeInvite(state) {
   const data = {
@@ -20,7 +44,7 @@ export function encodeInvite(state) {
     sk: state.selectedLookId || null,
   };
   const json = JSON.stringify(data);
-  const encoded = btoa(unescape(encodeURIComponent(json)));
+  const encoded = toBase64Url(encodeUnicode(json));
   return `${window.location.origin}${window.location.pathname}#invite=${encoded}`;
 }
 
@@ -28,7 +52,7 @@ export function decodeInvite(hash) {
   try {
     if (!hash || !hash.startsWith('#invite=')) return null;
     const encoded = hash.slice('#invite='.length);
-    const json = decodeURIComponent(escape(atob(encoded)));
+    const json = decodeUnicode(fromBase64Url(encoded));
     const data = JSON.parse(json);
     if (data._v !== INVITE_VERSION) return null;
     return {
