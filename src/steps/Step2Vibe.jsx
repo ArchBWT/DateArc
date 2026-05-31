@@ -48,16 +48,17 @@ export function Step2Vibe({ state, setVibe }) {
               <p>{vibe.description}</p>
 
               {/* Tags */}
-              <div className="vibe-tags">
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 4, justifyContent: 'center', marginTop: 4 }}>
                 {vibe.tags.map(tag => (
-                  <span
-                    key={tag}
-                    className="vibe-tag"
-                    style={{
-                      background: isSelected ? `${vibe.color}22` : 'rgba(255,255,255,0.05)',
-                      color: isSelected ? vibe.color : 'var(--text-muted)',
-                    }}
-                  >
+                  <span key={tag} style={{
+                    fontSize: 10,
+                    padding: '2px 8px',
+                    borderRadius: '99px',
+                    background: isSelected ? `${vibe.color}22` : 'rgba(255,255,255,0.05)',
+                    color: isSelected ? vibe.color : 'var(--text-muted)',
+                    fontWeight: 500,
+                    letterSpacing: '0.03em',
+                  }}>
                     {tag}
                   </span>
                 ))}

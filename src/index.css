@@ -5,8 +5,8 @@
   /* Backgrounds */
   --bg-primary: #0d0d14;
   --bg-secondary: #12121e;
-  --bg-card: rgba(20, 20, 32, 0.65);
-  --bg-card-hover: rgba(32, 32, 50, 0.7);
+  --bg-card: rgba(255, 255, 255, 0.055);
+  --bg-card-hover: rgba(255, 255, 255, 0.09);
   --bg-card-active: rgba(232, 131, 106, 0.15);
 
   /* Accents */
@@ -20,8 +20,8 @@
 
   /* Text */
   --text-primary: #f0ece8;
-  --text-secondary: #ded9d4;
-  --text-muted: #a2a2b5;
+  --text-secondary: #c8c0b8;
+  --text-muted: #7a7a8a;
   --text-accent: var(--accent-coral);
 
   /* Borders */
@@ -81,9 +81,8 @@ body {
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-primary);
-  height: 100dvh;
-  height: 100svh;
-  overflow: hidden;
+  min-height: 100dvh;
+  overflow-x: hidden;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -117,12 +116,10 @@ body::before {
 .app-shell {
   width: 100%;
   max-width: 430px; /* iPhone Pro Max logical width */
-  height: 100dvh;
-  height: 100svh;
+  min-height: 100dvh;
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: hidden;
 }
 
 /* ─── Progress Bar ───────────────────────────────────────── */
@@ -198,15 +195,6 @@ body::before {
   flex: 1;
   /* 20px sides feel natural on iPhone; bottom leaves room for sticky nav */
   padding: var(--spacing-sm) 20px calc(var(--spacing-2xl) + 80px + var(--safe-bottom));
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-}
-
-/* ─── Invite View ────────────────────────────────────────── */
-.invite-view {
-  flex: 1;
-  padding: var(--spacing-md) 20px calc(var(--spacing-xl) + var(--safe-bottom));
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
@@ -459,24 +447,6 @@ body::before {
 }
 
 .vibe-card.selected h3 { color: var(--accent-coral-light); }
-
-.vibe-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-  margin-top: 6px;
-  width: 100%;
-}
-
-.vibe-tag {
-  font-size: 11px;
-  padding: 3px 10px;
-  border-radius: var(--radius-full);
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  transition: var(--transition-base);
-}
 
 /* ─── Location Step (Step 3) ─────────────────────────────── */
 .location-search {
@@ -1012,8 +982,6 @@ button.yandex-suggest-item:disabled {
   padding-bottom: 8px;
   margin-bottom: var(--spacing-md);
   scrollbar-width: none;
-  scroll-snap-type: x mandatory;
-  -webkit-overflow-scrolling: touch;
 }
 
 .look-trends-scroll::-webkit-scrollbar {
@@ -1031,7 +999,6 @@ button.yandex-suggest-item:disabled {
   position: relative;
   font-family: inherit;
   color: inherit;
-  scroll-snap-align: start;
 }
 
 .look-trend-card.selected {
@@ -1210,8 +1177,8 @@ button.yandex-suggest-item:disabled {
 
 .sponsored-look-visual {
   position: relative;
-  width: clamp(80px, 24vw, 112px);
-  height: clamp(80px, 24vw, 112px);
+  width: 112px;
+  height: 112px;
   border-radius: var(--radius-lg);
   display: flex;
   align-items: center;
