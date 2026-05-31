@@ -787,6 +787,7 @@ button.yandex-suggest-item:disabled {
   z-index: 10;
   top: 0;
   left: 0;
+  outline: none;
 }
 
 .time-slider-input::-webkit-slider-thumb {
@@ -803,6 +804,7 @@ button.yandex-suggest-item:disabled {
   position: relative;
   top: 50%;
   transform: translateY(-50%);
+  outline: none;
 }
 
 .time-slider-input::-webkit-slider-thumb:hover {
